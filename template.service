@@ -5,8 +5,8 @@ After=network.target mosquitto.service
 
 [Service]
 Type=notify
-User=daemon
-Group=daemon
+User=root
+Group=root
 WorkingDirectory=/opt/epsolar-tracer/
 ExecStart=/usr/bin/python3 /opt/epsolar-tracer/mqtt.py
 StandardOutput=null

@@ -7,6 +7,7 @@ from configparser import ConfigParser
 from colorama import init as colorama_init
 from colorama import Fore, Back, Style
 from time import time, sleep, localtime, strftime
+from unidecode import unidecode
 import json
 import sys
 import os.path
