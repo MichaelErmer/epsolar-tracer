@@ -134,6 +134,8 @@ print_line("Manufacturer:" + repr(response.information[0]))
 print_line("Model:" + repr(response.information[1]))
 print_line("Version:" + repr(response.information[2]))
 
+sd_notifier.notify('READY=1')
+
 while True:
     for reg in registers:
         #print
@@ -157,7 +159,7 @@ while True:
         mqtt_client.publish('{}/coils/{}/value'.format(base_topic, reg.name), float(value), 1, True)
         #print client.write_output(reg.name,value.value)
 
-    print_line('All metrics published')
+    print_line('All metrics published', console=False, sd_notify=True)
 
     if daemon_enabled:
         print_line('Sleeping ({} seconds) ...'.format(sleep_period))
