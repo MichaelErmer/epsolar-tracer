@@ -1,3 +1,16 @@
+# config file
+config.ini
+
+# built driver
+xr_usb_serial_common-1a/.tmp_versions
+xr_usb_serial_common-1a/*.cmd
+xr_usb_serial_common-1a/Module.symvers
+xr_usb_serial_common-1a/modules.order
+xr_usb_serial_common-1a/xr_usb_serial_common.ko
+xr_usb_serial_common-1a/xr_usb_serial_common.mod.c
+xr_usb_serial_common-1a/xr_usb_serial_common.mod.o
+xr_usb_serial_common-1a/xr_usb_serial_common.o
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
