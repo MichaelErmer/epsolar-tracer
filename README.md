@@ -45,7 +45,7 @@ On a modern Linux system just a few steps are needed to get the daemon working.
 The following example shows the installation under Debian/Raspbian below the `/opt` directory:
 
 ```shell
-git clone https://github.com/ThomDietrich/miflora-mqtt-daemon.git /opt/epsolar-tracer
+git clone https://github.com/MichaelErmer/epsolar-tracer.git /opt/epsolar-tracer
 
 cd /opt/epsolar-tracer
 sudo pip3 install -r requirements.txt
