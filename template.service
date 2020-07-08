@@ -1,0 +1,20 @@
+[Unit]
+Description=Epsolar Tracer MQTT Daemon
+Documentation=https://github.com/MichaelErmer/epsolar-tracer
+After=network.target mosquitto.service
+
+[Service]
+Type=notify
+User=daemon
+Group=daemon
+WorkingDirectory=/opt/epsolar-tracer/
+ExecStart=/usr/bin/python3 /opt/epsolar-tracer/mqtt.py
+StandardOutput=null
+#StandardOutput=syslog
+#SyslogIdentifier=epsolartracer
+StandardError=journal
+Environment=PYTHONUNBUFFERED=true
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
