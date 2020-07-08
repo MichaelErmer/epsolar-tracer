@@ -36,3 +36,46 @@ Charging equipment rated input voltage = 150.0V
 Charging equipment rated input current = 20.0A
 ...
 ```
+
+## MQTT
+
+### Installation
+
+On a modern Linux system just a few steps are needed to get the daemon working.
+The following example shows the installation under Debian/Raspbian below the `/opt` directory:
+
+```shell
+git clone https://github.com/ThomDietrich/miflora-mqtt-daemon.git /opt/epsolar-tracer
+
+cd /opt/epsolar-tracer
+sudo pip3 install -r requirements.txt
+```
+
+### Configuration
+
+To match personal needs, all operation details can be configured using the file [`config.ini`](config.ini.template).
+The file needs to be created first:
+
+```shell
+cp /opt/epsolar-tracer/config.{ini.tempalte,ini}
+```
+
+### Continuous Daemon/Service
+
+You most probably want to execute the program **continuously in the background**.
+This can be done either by using the internal daemon or cron.
+
+**Attention:** Daemon mode must be enabled in the configuration file (default).
+
+1. Systemd service - on systemd powered systems the **recommended** option
+
+   ```shell
+   sudo cp /opt/epsolar-tracer/template.service /etc/systemd/system/tracer.service
+
+   sudo systemctl daemon-reload
+
+   sudo systemctl start tracer.service
+   sudo systemctl status tracer.service
+
+   sudo systemctl enable tracer.service
+   ```
