@@ -64,9 +64,12 @@ sudo insmod /opt/epsolar-tracer/xr_usb_serial_common-1a/xr_usb_serial_common.ko
 
 ### Enabling driver on boot
 
-1. Disable the default cdc-acm kernel module by creating the file /etc/modprobe.d/blacklist-cdc-acm.conf and add this line `blacklist cdc-acm`
-2. Add this to /etc/rc.local `insmod /opt/epsolar-tracer/xr_usb_serial_common-1a/xr_usb_serial_common.ko`
-3. Reboot
+
+```
+echo blacklist cdc-acm > /etc/modprobe.d/blacklist-cdc-acm.conf
+update-initramfs -u
+echo insmod /opt/epsolar-tracer/xr_usb_serial_common-1a/xr_usb_serial_common.ko >> /etc/rc.local
+```
 
 ## MQTT
 
