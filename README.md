@@ -41,7 +41,7 @@ Charging equipment rated input current = 20.0A
 
 ### Building
 
-    Readme in xr_usb_serial_common-1a(xr_usb_serial_common-1a/README)
+Readme in xr_usb_serial_common-1a(xr_usb_serial_common-1a/README.txt)
 
 ### Raspberry 4 Issues
 
