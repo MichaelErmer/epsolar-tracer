@@ -1,0 +1,1 @@
+cmd_/opt/epsolar-tracer/xr_usb_serial_common-1c/xr_usb_serial_common.ko := ld -r  -EL -T ./scripts/module-common.lds -T ./arch/arm/kernel/module.lds  --build-id  -o /opt/epsolar-tracer/xr_usb_serial_common-1c/xr_usb_serial_common.ko /opt/epsolar-tracer/xr_usb_serial_common-1c/xr_usb_serial_common.o /opt/epsolar-tracer/xr_usb_serial_common-1c/xr_usb_serial_common.mod.o ;  true
