@@ -37,6 +37,37 @@ Charging equipment rated input current = 20.0A
 ...
 ```
 
+## Raspberry (4) driver building
+
+### Building
+
+    Readme in xr_usb_serial_common-1a(xr_usb_serial_common-1a/README)
+
+### Raspberry 4 Issues
+
+If your system is missing kernel headers ie. you get this error: `make[1]: *** /lib/modules/4.14.50-v7+/build: No such file or directory. Stop.`
+
+Reinstall your bootloader, kernel and kernel-headers
+
+```bash
+sudo apt update && sudo apt install -yy --reinstall raspberrypi-bootloader raspberrypi-kernel
+sudo apt install raspberrypi-kernel-headers
+```
+
+### Enabling driver
+
+```bash
+sudo rmmod cdc-acm
+sudo modprobe -r cdc-acm
+sudo insmod /opt/epsolar-tracer/xr_usb_serial_common-1a/xr_usb_serial_common.ko
+```
+
+### Enabling driver on boot
+
+1. Disable the default cdc-acm kernel module by creating the file /etc/modprobe.d/blacklist-cdc-acm.conf and add this line `blacklist cdc-acm`
+2. Add this to /etc/rc.local `insmod /opt/epsolar-tracer/xr_usb_serial_common-1a/xr_usb_serial_common.ko`
+3. Reboot
+
 ## MQTT
 
 ### Installation
