@@ -1,3 +1,11 @@
+[Battery]
+
+# this is used to calculate the Real SOC
+# battery min charge
+min_voltage = 11.9
+# battery max charge
+max_voltage = 13.1
+
 [Daemon]
 
 # Enable or Disable an endless execution loop (Default: true)

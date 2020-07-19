@@ -93,9 +93,10 @@ class Register:
     def encode(self, value):
         # FIXME handle 2 word registers
         rawvalue = int(value * self.times)
+        print(rawvalue)
         if rawvalue < 0:
             rawvalue = (-rawvalue - 1) ^ 0xffff
-            #print rawvalue
+            print(rawvalue)
         return rawvalue
     
 class Coil(Register):

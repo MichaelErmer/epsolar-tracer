@@ -1,4 +1,5 @@
 # -*- coding: iso-8859-15 -*-
+from datetime import datetime
 
 # import the server implementation
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
@@ -68,10 +69,44 @@ class EPsolarTracerClient:
             _logger.error("Cannot write input register " + repr(name))
             pass
         else:
-            self.client.write_registers(register.address, values, unit = self.unit)
+            print(name, register.address, values, self.unit)
+            registers = self.client.write_registers(register.address, values, unit = self.unit)
+            print(registers)
             response = True
         return response
-    
+
+    def readRTC(self):
+        register = registerByName('Real time clock 1')
+        sizeAddress = 3
+        result = self.client.read_holding_registers(register.address, sizeAddress, unit=self.unit)
+        return self.decodeRTC(result.registers)
+
+    def writeRTC(self, datetime):
+        register = registerByName('Real time clock 1')
+        values = self.encodeRTC(datetime)
+        self.client.write_registers(register.address, values, unit=self.unit)
+        return True
+
+    def decodeRTC(self, rtc):
+        s = 2000
+        secMin  = rtc[0]
+        hourDay = rtc[1]
+        monthYear = rtc[2]
+        secs  = (secMin & 0xff)
+        hour  = (hourDay & 0xff)
+        month = (monthYear & 0xff)
+        minut = secMin    >> 8
+        day   = hourDay   >> 8
+        year  = monthYear >> 8
+        return datetime(s+year, month, day, hour, minut, secs)
+
+    def encodeRTC(self, datetime):
+        s = 2000
+        rtc1 = int( (datetime.minute << 8) | datetime.second)
+        rtc2 = int( (datetime.day << 8) | datetime.hour)
+        rtc3 = int( (datetime.year -s << 8) | datetime.month)
+        return [rtc1, rtc2, rtc3]
+
 __all__ = [
     "EPsolarTracerClient",
 ]

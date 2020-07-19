@@ -67,6 +67,8 @@ except IOError:
 sleep_period = config['Daemon'].getint('period', 300)
 daemon_enabled = config['Daemon'].getboolean('enabled', True)
 base_topic = config['MQTT'].get('base_topic', default_base_topic).lower()
+max_voltage = config['Battery'].getfloat('max_voltage', 13.1)
+min_voltage = config['Battery'].getfloat('min_voltage', 11.9)
 
 # Eclipse Paho callbacks - http://www.eclipse.org/paho/clients/python/docs/#callbacks
 def on_connect(client, userdata, flags, rc):
@@ -138,18 +140,40 @@ print_line("Version:" + repr(response.information[2]))
 sd_notifier.notify('READY=1')
 
 while True:
+    data = dict()
     for reg in registers:
         #print
         #print reg
         value = client.read_input(reg.name)
         #print_line(value)
+        data[reg.name] = float(value)
         mqtt_client.publish('{}/registers/{}/unitShort'.format(base_topic, reg.name), reg.unit()[1], 1, True)
         mqtt_client.publish('{}/registers/{}/unitLong'.format(base_topic, reg.name), reg.unit()[0], 1, True)
         mqtt_client.publish('{}/registers/{}/value'.format(base_topic, reg.name), float(value), 1, True)
 
         #if value.value is not None:
         #    print client.write_output(reg.name,value.value)
+    chargingEquipmentStatus = int(client.read_input("Charging equipment status"))
+    chargingStatus = 3 & (chargingEquipmentStatus >> 2)
+    print_line("cs" + str(chargingStatus))
+    # charger status: 1 = running 0 = standby
+    data["Charging equipment status D0"] = 1 & chargingEquipmentStatus
+    # pv equipment: 0 = normale 1 = fault
+    data["Charging equipment status D1"] = 1 & (chargingEquipmentStatus >> 1)
+    # charging status: 0 = no charging 1 = float 2 = boost 3 = equalize
+    data["Charging equipment status D3"] = 3 & (chargingEquipmentStatus >> 2)
+    # Input volt status. 00 normal, 01 no power connected, 02H Higher volt input, 03H Input volt error.
+    data["Charging equipment status D15"] = 15 & (chargingEquipmentStatus >> 14)
+    # battery level: 01H Overvolt , 00H Normal , 02H Under Volt, 03H Low Volt Disconnect, 04H Fault
+    batteryStatus = int(client.read_input("Battery status"))
+    data["Battery level"] = 15 & batteryStatus
+    
+    # real SOC 0-100.00, only can be calculated if battery voltage is controlled by battery = if no charging
+    if (data["Charging equipment status D3"] == 0):
+        data["Real SOC"] = (data["Charging equipment output voltage"] - min_voltage) / ((max_voltage - min_voltage) / 100)
 
+    mqtt_client.publish('{}/data'.format(base_topic), json.dumps(data), 1, True)
+    
     for reg in coils:
         #print
         #print reg
